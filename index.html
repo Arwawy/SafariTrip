@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رحلة إلى السفاري - فصل المبدعون</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sakkal Majalla', 'Tajawal', sans-serif;
+            background: linear-gradient(rgba(44, 24, 16, 0.6), rgba(20, 10, 5, 0.75)), 
+                        url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            min-height: 100vh;
+        }
+
+        .hero-section {
+            background: rgba(253, 248, 242, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 15px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 3px solid #bc6c25;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .hero-logo {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            border-radius: 15px;
+            background: #fff;
+            padding: 5px;
+            border: 2px solid #dda15e;
+        }
+
+        .hero-title-box {
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        .hero-title-box h1 {
+            color: #2c1810;
+            font-size: 34px;
+            font-weight: 900;
+            margin: 0;
+        }
+
+        .hero-title-box p {
+            color: #bc6c25;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 3px 0 0;
+        }
+
+        .game-launch-btn {
+            background: linear-gradient(135deg, #dda15e, #bc6c25);
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            font-size: 22px;
+            font-family: inherit;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 10px auto 30px;
+            display: block;
+            transition: transform 0.2s;
+        }
+
+        .game-launch-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .safari-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            padding: 0 10px 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .safari-card {
+            background: rgba(253, 248, 242, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            cursor: pointer;
+            border: 3px solid #dda15e;
+            transition: all 0.3s ease;
+        }
+
+        .safari-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(188, 108, 37, 0.5);
+            border-color: #bc6c25;
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background: #e9edc9;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .safari-card:hover .card-img-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .card-body {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card-body h2 {
+            font-size: 28px;
+            color: #2c1810;
+            margin: 0 0 8px;
+            font-weight: 900;
+        }
+
+        .location-tag {
+            font-size: 18px;
+            background: #fefae0;
+            color: #99581e;
+            padding: 4px 12px;
+            border-radius: 15px;
+            display: inline-block;
+            font-weight: bold;
+            border: 2px solid #dda15e;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(20, 10, 5, 0.85);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+
+        .modal-card {
+            background: #fdf8f2;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            border: 5px solid #bc6c25;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid #dda15e;
+        }
+
+        .modal-body h2 {
+            font-size: 34px;
+            color: #2c1810;
+            margin: 10px 0 5px;
+            font-weight: 900;
+        }
+
+        .modal-location {
+            font-size: 20px;
+            color: #bc6c25;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .info-cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .info-box {
+            background: #fefae0;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border-right: 5px solid #bc6c25;
+            font-size: 20px;
+            color: #38220f;
+        }
+
+        .info-box strong {
+            color: #99581e;
+        }
+
+        .modal-close-btn {
+            background: linear-gradient(135deg, #bc6c25, #99581e);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-size: 22px;
+            font-family: inherit;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(188, 108, 37, 0.4);
+        }
+
+        .game-card {
+            background: #fdf8f2;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 600px;
+            padding: 25px;
+            border: 5px solid #283618;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .game-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .opt-btn {
+            background: #dda15e;
+            color: #2c1810;
+            border: none;
+            padding: 15px;
+            font-size: 22px;
+            font-family: inherit;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .opt-btn:hover {
+            background: #bc6c25;
+            color: #fff;
+        }
+
+        .feedback-banner {
+            display: none;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(40, 54, 24, 0.95);
+            color: #fefae0;
+            padding: 25px 40px;
+            border-radius: 20px;
+            font-size: 32px;
+            font-weight: 900;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 4px solid #dda15e;
+            z-index: 10;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section">
+        <img src="logo.png" alt="شعار روضة نورة بنت حسن الجبر" class="hero-logo" onerror="this.style.display='none'">
+        <div class="hero-title-box">
+            <h1>رحلة إلى السفاري البرية</h1>
+            <p>روضة نورة بنت حسن الجبر الأهلية - فصل المبدعون</p>
+        </div>
+    </div>
+
+    <button class="game-launch-btn" onclick="startQuiz()">🎮 ابدأ مسابقة تحدي المبدعون!</button>
+
+    <div class="safari-grid" id="safariGrid"></div>
+
+    <div id="animalModal" class="modal-overlay">
+        <div class="modal-card">
+            <img id="modalImg" class="modal-img" src="" alt="صورة الحيوان">
+            <h2 id="modalTitle">اسم الحيوان</h2>
+            <div id="modalLocation" class="modal-location"> الموقع</div>
+            
+            <div class="info-cards-container">
+                <div class="info-box" id="infoDesc"><strong>قصتي: </strong>...</div>
+                <div class="info-box" id="infoDiet"><strong>ماذا أأكل؟ </strong>...</div>
+            </div>
+
+            <button class="modal-close-btn" onclick="closeModal()">إغلاق ومتابعة الرحلة ✨</button>
+        </div>
+    </div>
+
+    <div id="quizModal" class="modal-overlay">
+        <div class="game-card">
+            <div id="feedbackBanner" class="feedback-banner">أحسنت يا بطل! 🌟</div>
+
+            <h2 id="quizTitle" style="color: #283618; font-size: 32px;">مسابقة تحدي السفاري 🏆</h2>
+            <p id="quizQuestion" style="font-size: 24px; color: #38220f; margin: 20px 0;">السؤال هنا...</p>
+            <div class="game-options" id="quizOptions"></div>
+            <button class="modal-close-btn" style="margin-top: 20px; background: #6c757d;" onclick="closeQuiz()">إنهاء المسابقة</button>
+        </div>
+    </div>
+
+    <script>
+        const animals = [
+            { name: "المها العربي", location: "المملكة العربية السعودية 🇸🇦", desc: "أنا المها العربي، لوني أبيض كاللؤلؤ وأعيش في صحراء المملكة المحمية.", diet: "أعشاب البراري والنباتات الصحراوية اللذيذة.", img: "maha.jpg", audio: "maha.mp3" },
+            { name: "النمر العربي", location: "المملكة العربية السعودية 🇸🇦", desc: "أنا النمر العربي السريع، أعيش في الجبال الصخرية العالية.", diet: "صيد الحيوانات الصغيرة بحذر في المحميات.", img: "leopard.jpg", audio: "leopard.mp3" },
+            { name: "الضب الصحراوي", location: "المملكة العربية السعودية 🇸🇦", desc: "أنا الضب، أحفر جحوراً عميقة تحت الرمال لأحتمي من حرارة الشمس.", diet: "الأزهار البرية والأوراق الخضراء.", img: "dabb.jpg", audio: "dabb.mp3" },
+            { name: "الأسد", location: "أفريقيا 🌍", desc: "أنا ملك الغابة الشجاع، أعيش مع عائلتي (القطيع) في سهول أفريقيا.", diet: "اللحوم الطازجة في السافانا.", img: "lion.jpg", audio: "lion.mp3" },
+            { name: "الزرافة", location: "أفريقيا 🌍", desc: "أنا الزرافة صاحبة أطول رقبة في العالم لأصل لأعلى الأشجار.", diet: "أوراق الأشجار العالية والبراعم.", img: "giraffe.jpg", audio: "giraffe.mp3" },
+            { name: "الفيل الأفريقي", location: "أفريقيا 🌍", desc: "أنا الفيل الضخم، لدي خرطوم طويل يساعدني في كل شيء.", diet: "الأعشاب، الفواكه، ولحاء الأشجار.", img: "elephant.jpg", audio: "elephant.mp3" },
+            { name: "الحمار الوحشي", location: "أفريقيا 🌍", desc: "أنا الحمار الوحشي بخطوطي السوداء والبيضاء الرائعة.", diet: "الأعشاب القصيرة في السهول الواسعة.", img: "zebra.jpg", audio: "zebra.mp3" },
+            { name: "الفهد الصياد", location: "أفريقيا 🌍", desc: "أنا أسرع حيوان بري على وجه الأرض وأستطيع الركض بسرعة البرق.", diet: "الغزلان والحيوانات السريعة.", img: "cheetah.jpg", audio: "cheetah.mp3" },
+            { name: "وحيد القرن", location: "أفريقيا 🌍", desc: "أنا وحيد القرن ذو الجسم القوي والقرن المميز على أنفي.", diet: "الأعشاب والشجيرات البرية.", img: "rhino.jpg", audio: "rhino.mp3" }
+        ];
+
+        let currentAudio = null;
+        let score = 0;
+        let currentQuestionIdx = 0;
+        let activeQuestions = [];
+        let usedQuestionsIndices = []; // لتتبع الأسئلة التي تم طرحها لضمان عدم تكرارها عبر الجولات الـ 5
+
+        function buildGrid() {
+            const grid = document.getElementById('safariGrid');
+            animals.forEach((animal, index) => {
+                const card = document.createElement('div');
+                card.className = 'safari-card';
+                card.onclick = () => openModal(index);
+
+                card.innerHTML = `
+                    <div class="card-img-wrapper">
+                        <img src="${animal.img}" alt="${animal.name}" onerror="this.src='https://via.placeholder.com/300?text=${animal.name}'">
+                    </div>
+                    <div class="card-body">
+                        <h2>${animal.name}</h2>
+                        <div class="location-tag">${animal.location}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openModal(index) {
+            const animal = animals[index];
+            document.getElementById('modalTitle').innerText = animal.name;
+            document.getElementById('modalLocation').innerText = "📍 الموقع البيئي: " + animal.location;
+            document.getElementById('infoDesc').innerHTML = "<strong>قصتي: </strong>" + animal.desc;
+            document.getElementById('infoDiet').innerHTML = "<strong>ماذا أأكل؟ </strong>" + animal.diet;
+            document.getElementById('modalImg').src = animal.img;
+            
+            document.getElementById('animalModal').style.display = 'flex';
+
+            if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+            currentAudio = new Audio(animal.audio);
+            currentAudio.play().catch(e => console.log("الصوت غير متوفر."));
+        }
+
+        function closeModal() {
+            document.getElementById('animalModal').style.display = 'none';
+            if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+        }
+
+        // بنك أسئلة كبير جداً (25 سؤالاً متنوعاً) لضمان تغطية 5 جولات كاملة بدون أي تكرار
+        const questionBank = [
+            { q: "من هو أسرع حيوان بري على وجه الأرض؟", options: ["الفهد الصياد", "الأسد", "الحمار الوحشي", "الزرافة"], correct: 0 },
+            { q: "حيوان يعيش في صحراء المملكة ولونه أبيض كاللؤلؤ؟", options: ["الضب الصحراوي", "المها العربي", "النمر العربي", "الفيل"], correct: 1 },
+            { q: "من هو الحيوان الذي يمتلك أطول رقبة في العالم؟", options: ["الزرافة", "الفيل", "الأسد", "المها"], correct: 0 },
+            { q: "حيوان صحراوي يحفر جحوراً عميقة تحت الرمال ويحب أكل الأزهار؟", options: ["الضب", "النمر", "الفهد", "وحيد القرن"], correct: 0 },
+            { q: "أي من هذه الحيوانات يعتبر ملك الغابة ويعيش في أفريقيا؟", options: ["الضب", "الأسد", "المها", "النمر العربي"], correct: 1 },
+            { q: "ما هو الحيوان أضخم حيوان يعيش على اليابسة ويمتلك خرطوماً طويلاً؟", options: ["الفيل الأفريقي", "وحيد القرن", "الزرافة", "الحمار الوحشي"], correct: 0 },
+            { q: "أي من هذه الحيوانات يتميز بخطوط سوداء وبيضاء رائعة؟", options: ["النمر العربي", "الحمار الوحشي", "الفهد", "المها العربي"], correct: 1 },
+            { q: "أين يعيش المها العربي والنمر العربي؟", options: ["المملكة العربية السعودية", "أفريقيا", "قطب المتجمد", "غابات الأمازون"], correct: 0 },
+            { q: "حيوان قوي جداً يمتلك قرناً كبيراً على أنفه ويحب التدحرج في الطين؟", options: ["وحيد القرن", "الزرافة", "الأسد", "الضب"], correct: 0 },
+            { q: "من هو النمر الذي يعتبر مهدداً بالانقراض ويعيش في الجبال الصخرية السعودية؟", options: ["النمر العربي", "الفهد", "الأسد", "الفيل"], correct: 0 },
+            { q: "ماذا يأكل المها العربي في صحراء المملكة؟", options: ["الأعشاب والنباتات الصحراوية", "اللحوم الطازجة", "الأسماك", "الحشرات"], correct: 0 },
+            { q: "أين يعيش الأسد والفيل الأفريقي؟", options: ["أفريقيا", "المملكة العربية السعودية", "أوروبا", "القطب الشمالي"], correct: 0 },
+            { q: "ما هي الوظيفة الأساسية لخرطوم الفيل الأفريقي؟", options: ["الشرب والاستحمام وحمل الأشياء", "الركض السريع", "الحفر تحت الرمال", "الطيران"], correct: 0 },
+            { q: "أي من هذه الحيوانات يتغذى بشكل أساسي على أوراق الأشجار العالية؟", options: ["الزرافة", "الأسد", "النمر العربي", "الضب"], correct: 0 },
+            { q: "كيف يحمي الضب نفسه من حرارة الشمس الحارقة في الصحراء؟", options: ["بحفر جحور عميقة تحت الرمال", "بالصعود لأعلى الجبال", "بالسباحة في النهر", "بالنوم على الأشجار"], correct: 0 },
+            { q: "ما هو الحيوان المعروف بـ (ملك الغابة)؟", options: ["الأسد", "الفيل", "الفهد", "النمر"], correct: 0 },
+            { q: "أي من هذه الحيوانات يعتبر الأسرع في العالم ويستطيع مطاردة الفرائس بسرعة فائقة؟", options: ["الفهد الصياد", "الحمار الوحشي", "الزرافة", "المها العربي"], correct: 0 },
+            { q: "ما لون لؤلؤة الصحراء (المها العربي)؟", options: ["أبيض ناصع", "أسود داكن", "أصفر ذهبي", "بني غامق"], correct: 0 },
+            { q: "أي من الحيوانات التالية يمتلك خطوطاً مميزة جداً على جسمه تشبه البيجاما؟", options: ["الحمار الوحشي", "الفهد", "النمر العربي", "الفيل الأفريقي"], correct: 0 },
+            { q: "ما هو الغذاء المفضل للضب الصحراوي في بيئته؟", options: ["الأزهار البرية والأوراق الخضراء", "اللحوم", "الفواكه الاستوائية", "العسل"], correct: 0 },
+            { q: "حيوان ضخم جداً وله أذنان كبيرتان ويعيش في السافانا الأفريقية؟", options: ["الفيل الأفريقي", "المها العربي", "الضب", "الزرافة"], correct: 0 },
+            { q: "ما هو الحيوان الذي يعيش في الجبال الصخرية في المملكة العربية السعودية ويواجه خطر الانقراض؟", options: ["النمر العربي", "الأسد الأفريقي", "الفيل", "الحمار الوحشي"], correct: 0 },
+            { q: "أي من هذه الحيوانات يستخدم قرنه الكبير على أنفه للدفاع عن نفسه؟", options: ["وحيد القرن", "المها العربي", "الزرافة", "الضب"], correct: 0 },
+            { q: "ما هو الحيوان الذي يحب الاستحمام في الطين ليبرد جسمه؟", options: ["وحيد القرن", "النمر العربي", "المها", "الفهد"], correct: 0 },
+            { q: "في أي قارة تعيش معظم الحيوانات الضخمة مثل الفيلة والزرافات والأسود؟", options: ["أفريقيا", "أوروبا", "أستراليا", "القارة القطبية"], correct: 0 }
+        ];
+
+        function startQuiz() {
+            currentQuestionIdx = 0;
+            score = 0;
+            
+            // إذا استنفد الأطفال جميع الأسئلة (أكثر من 5 جولات)، يتم إعادة تصفير السجل
+            if (usedQuestionsIndices.length >= questionBank.length) {
+                usedQuestionsIndices = [];
+            }
+
+            // اختيار 5 أسئلة جديدة لم تُستخدم من قبل في الجولات السابقة
+            let availableQuestions = questionBank.filter((_, idx) => !usedQuestionsIndices.includes(idx));
+            availableQuestions.sort(() => Math.random() - 0.5);
+            
+            activeQuestions = availableQuestions.slice(0, 5);
+            
+            // تسجيل هذه الأسئلة كـ "مستخدمة" لكي لا تتكرر في الجولات القادمة
+            activeQuestions.forEach(q => {
+                let originalIdx = questionBank.indexOf(q);
+                usedQuestionsIndices.push(originalIdx);
+            });
+
+            document.getElementById('quizModal').style.display = 'flex';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIdx >= activeQuestions.length) {
+                document.getElementById('quizQuestion').innerText = `🎉 انتهت الجولة! وربح أبطال فصل المبدعون ${score} من ${activeQuestions.length} نقاط!\nاستعدوا لجولة جديدة بأسئلة مختلفة تماماً ✨`;
+                document.getElementById('quizOptions').innerHTML = `<button class="opt-btn" onclick="startQuiz()" style="grid-column: span 2; background: #283618; color: #fff;">ابدأ جولة جديدة (بدون تكرار)</button><button class="opt-btn" onclick="closeQuiz()" style="grid-column: span 2; background: #6c757d; color: #fff;">إغلاق المسابقة</button>`;
+                return;
+            }
+
+            const qData = activeQuestions[currentQuestionIdx];
+            document.getElementById('quizQuestion').innerText = `سؤال ${currentQuestionIdx + 1}: ${qData.q}`;
+            
+            const optionsDiv = document.getElementById('quizOptions');
+            optionsDiv.innerHTML = '';
+            
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx, qData.correct);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const banner = document.getElementById('feedbackBanner');
+            
+            if (selected === correct) {
+                score++;
+                banner.innerText = "أحسنت يا بطل! 🌟";
+                banner.style.background = "rgba(40, 54, 24, 0.95)";
+                let successAudio = new Audio('success.mp3');
+                successAudio.play().catch(e => console.log("ملف صوت النجاح غير متوفر."));
+            } else {
+                banner.innerText = "حظاً أوفر في السؤال القادم 💡";
+                banner.style.background = "rgba(153, 45, 34, 0.95)";
+                let wrongAudio = new Audio('wrong.mp3');
+                wrongAudio.play().catch(e => console.log("ملف صوت الخطأ غير متوفر."));
+            }
+
+            banner.style.display = 'block';
+            setTimeout(() => {
+                banner.style.display = 'none';
+                currentQuestionIdx++;
+                showQuestion();
+            }, 1500);
+        }
+
+        function closeQuiz() {
+            document.getElementById('quizModal').style.display = 'none';
+        }
+
+        window.onload = buildGrid;
+    </script>
+</body>
+</html>
