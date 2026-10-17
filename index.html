@@ -262,12 +262,19 @@
             border-radius: 15px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
 
         .opt-btn:hover {
             background: #bc6c25;
             color: #fff;
+        }
+
+        /* منع احتفاظ الزر بلون التركيز بعد الضغط */
+        .opt-btn:focus {
+            outline: none;
+            background: #dda15e;
+            color: #2c1810;
         }
 
         .feedback-banner {
@@ -311,7 +318,7 @@
         <div class="modal-card">
             <img id="modalImg" class="modal-img" src="" alt="صورة الحيوان">
             <h2 id="modalTitle">اسم الحيوان</h2>
-            <div id="modalLocation" class="modal-location"> الموقع</div>
+            <div id="modalLocation" class="modal-location">الموقع</div>
             
             <div class="info-cards-container">
                 <div class="info-box" id="infoDesc"><strong>قصتي: </strong>...</div>
@@ -350,7 +357,7 @@
         let score = 0;
         let currentQuestionIdx = 0;
         let activeQuestions = [];
-        let usedQuestionsIndices = []; // لتتبع الأسئلة التي تم طرحها لضمان عدم تكرارها عبر الجولات الـ 5
+        let usedQuestionsIndices = [];
 
         function buildGrid() {
             const grid = document.getElementById('safariGrid');
@@ -392,7 +399,6 @@
             if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
         }
 
-        // بنك أسئلة كبير جداً (25 سؤالاً متنوعاً) لضمان تغطية 5 جولات كاملة بدون أي تكرار
         const questionBank = [
             { q: "من هو أسرع حيوان بري على وجه الأرض؟", options: ["الفهد الصياد", "الأسد", "الحمار الوحشي", "الزرافة"], correct: 0 },
             { q: "حيوان يعيش في صحراء المملكة ولونه أبيض كاللؤلؤ؟", options: ["الضب الصحراوي", "المها العربي", "النمر العربي", "الفيل"], correct: 1 },
@@ -425,18 +431,15 @@
             currentQuestionIdx = 0;
             score = 0;
             
-            // إذا استنفد الأطفال جميع الأسئلة (أكثر من 5 جولات)، يتم إعادة تصفير السجل
             if (usedQuestionsIndices.length >= questionBank.length) {
                 usedQuestionsIndices = [];
             }
 
-            // اختيار 5 أسئلة جديدة لم تُستخدم من قبل في الجولات السابقة
             let availableQuestions = questionBank.filter((_, idx) => !usedQuestionsIndices.includes(idx));
             availableQuestions.sort(() => Math.random() - 0.5);
             
             activeQuestions = availableQuestions.slice(0, 5);
             
-            // تسجيل هذه الأسئلة كـ "مستخدمة" لكي لا تتكرر في الجولات القادمة
             activeQuestions.forEach(q => {
                 let originalIdx = questionBank.indexOf(q);
                 usedQuestionsIndices.push(originalIdx);
@@ -463,7 +466,11 @@
                 const btn = document.createElement('button');
                 btn.className = 'opt-btn';
                 btn.innerText = opt;
-                btn.onclick = () => checkAnswer(idx, qData.correct);
+                btn.onclick = (e) => {
+                    // إلغاء تركيز الزر فوراً ليعود للونه الطبيعي في السؤال القادم
+                    e.target.blur();
+                    checkAnswer(idx, qData.correct);
+                };
                 optionsDiv.appendChild(btn);
             });
         }
