@@ -9,6 +9,7 @@
 
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* إزالة خلفية اللمس المزعجة بالجوال */
         }
 
         body {
@@ -262,7 +263,8 @@
             border-radius: 15px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s, transform 0.1s;
+            transition: background 0.2s;
+            user-select: none;
         }
 
         .opt-btn:hover {
@@ -270,7 +272,6 @@
             color: #fff;
         }
 
-        /* منع احتفاظ الزر بلون التركيز بعد الضغط */
         .opt-btn:focus {
             outline: none;
             background: #dda15e;
@@ -354,10 +355,12 @@
         ];
 
         let currentAudio = null;
+        let sfxAudio = null; // متغير خاص لأصوات تفاعل الألعاب لمنع التداخل
         let score = 0;
         let currentQuestionIdx = 0;
         let activeQuestions = [];
         let usedQuestionsIndices = [];
+        let isAnswerLocked = false; // قفل لمنع النقر المزدوج على الجوال
 
         function buildGrid() {
             const grid = document.getElementById('safariGrid');
@@ -430,6 +433,7 @@
         function startQuiz() {
             currentQuestionIdx = 0;
             score = 0;
+            isAnswerLocked = false;
             
             if (usedQuestionsIndices.length >= questionBank.length) {
                 usedQuestionsIndices = [];
@@ -450,6 +454,7 @@
         }
 
         function showQuestion() {
+            isAnswerLocked = false; // فتح قفل الإجابة للسؤال الجديد
             if (currentQuestionIdx >= activeQuestions.length) {
                 document.getElementById('quizQuestion').innerText = `🎉 انتهت الجولة! وربح أبطال فصل المبدعون ${score} من ${activeQuestions.length} نقاط!\nاستعدوا لجولة جديدة بأسئلة مختلفة تماماً ✨`;
                 document.getElementById('quizOptions').innerHTML = `<button class="opt-btn" onclick="startQuiz()" style="grid-column: span 2; background: #283618; color: #fff;">ابدأ جولة جديدة (بدون تكرار)</button><button class="opt-btn" onclick="closeQuiz()" style="grid-column: span 2; background: #6c757d; color: #fff;">إغلاق المسابقة</button>`;
@@ -467,7 +472,6 @@
                 btn.className = 'opt-btn';
                 btn.innerText = opt;
                 btn.onclick = (e) => {
-                    // إلغاء تركيز الزر فوراً ليعود للونه الطبيعي في السؤال القادم
                     e.target.blur();
                     checkAnswer(idx, qData.correct);
                 };
@@ -476,20 +480,29 @@
         }
 
         function checkAnswer(selected, correct) {
+            if (isAnswerLocked) return; // منع الضغط المتكرر إذا تم اختيار إجابة بالفعل
+            isAnswerLocked = true;
+
             const banner = document.getElementById('feedbackBanner');
             
+            // إيقاف أي صوت سابق لمنع التداخل
+            if (sfxAudio) {
+                sfxAudio.pause();
+                sfxAudio.currentTime = 0;
+            }
+
             if (selected === correct) {
                 score++;
                 banner.innerText = "أحسنت يا بطل! 🌟";
                 banner.style.background = "rgba(40, 54, 24, 0.95)";
-                let successAudio = new Audio('success.mp3');
-                successAudio.play().catch(e => console.log("ملف صوت النجاح غير متوفر."));
+                sfxAudio = new Audio('success.mp3');
             } else {
                 banner.innerText = "حظاً أوفر في السؤال القادم 💡";
                 banner.style.background = "rgba(153, 45, 34, 0.95)";
-                let wrongAudio = new Audio('wrong.mp3');
-                wrongAudio.play().catch(e => console.log("ملف صوت الخطأ غير متوفر."));
+                sfxAudio = new Audio('wrong.mp3');
             }
+
+            sfxAudio.play().catch(e => console.log("الصوت غير متوفر."));
 
             banner.style.display = 'block';
             setTimeout(() => {
@@ -501,6 +514,10 @@
 
         function closeQuiz() {
             document.getElementById('quizModal').style.display = 'none';
+            if (sfxAudio) {
+                sfxAudio.pause();
+                sfxAudio.currentTime = 0;
+            }
         }
 
         window.onload = buildGrid;
