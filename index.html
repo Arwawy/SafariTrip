@@ -9,7 +9,7 @@
 
         * {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; /* إزالة خلفية اللمس المزعجة بالجوال */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -267,15 +267,10 @@
             user-select: none;
         }
 
-        .opt-btn:hover {
-            background: #bc6c25;
-            color: #fff;
-        }
-
-        .opt-btn:focus {
-            outline: none;
+        .opt-btn:hover, .opt-btn:active, .opt-btn:focus {
             background: #dda15e;
             color: #2c1810;
+            outline: none;
         }
 
         .feedback-banner {
@@ -355,12 +350,12 @@
         ];
 
         let currentAudio = null;
-        let sfxAudio = null; // متغير خاص لأصوات تفاعل الألعاب لمنع التداخل
+        let sfxAudio = null;
         let score = 0;
         let currentQuestionIdx = 0;
         let activeQuestions = [];
         let usedQuestionsIndices = [];
-        let isAnswerLocked = false; // قفل لمنع النقر المزدوج على الجوال
+        let isAnswerLocked = false;
 
         function buildGrid() {
             const grid = document.getElementById('safariGrid');
@@ -454,7 +449,7 @@
         }
 
         function showQuestion() {
-            isAnswerLocked = false; // فتح قفل الإجابة للسؤال الجديد
+            isAnswerLocked = false;
             if (currentQuestionIdx >= activeQuestions.length) {
                 document.getElementById('quizQuestion').innerText = `🎉 انتهت الجولة! وربح أبطال فصل المبدعون ${score} من ${activeQuestions.length} نقاط!\nاستعدوا لجولة جديدة بأسئلة مختلفة تماماً ✨`;
                 document.getElementById('quizOptions').innerHTML = `<button class="opt-btn" onclick="startQuiz()" style="grid-column: span 2; background: #283618; color: #fff;">ابدأ جولة جديدة (بدون تكرار)</button><button class="opt-btn" onclick="closeQuiz()" style="grid-column: span 2; background: #6c757d; color: #fff;">إغلاق المسابقة</button>`;
@@ -471,24 +466,34 @@
                 const btn = document.createElement('button');
                 btn.className = 'opt-btn';
                 btn.innerText = opt;
-                btn.onclick = (e) => {
-                    e.target.blur();
+                
+                // استخدام حدث التلامس المباشر للهواتف المحمولة لمنع أي تداخل
+                btn.ontouchstart = (e) => {
+                    e.preventDefault(); // منع النقرات المزدوجة الوهمية
+                    btn.blur();
                     checkAnswer(idx, qData.correct);
                 };
+                
+                btn.onclick = (e) => {
+                    btn.blur();
+                    checkAnswer(idx, qData.correct);
+                };
+
                 optionsDiv.appendChild(btn);
             });
         }
 
         function checkAnswer(selected, correct) {
-            if (isAnswerLocked) return; // منع الضغط المتكرر إذا تم اختيار إجابة بالفعل
+            if (isAnswerLocked) return;
             isAnswerLocked = true;
 
             const banner = document.getElementById('feedbackBanner');
             
-            // إيقاف أي صوت سابق لمنع التداخل
+            // إيقاف وتفريغ الصوت السابق فوراً لعدم تداخله
             if (sfxAudio) {
                 sfxAudio.pause();
                 sfxAudio.currentTime = 0;
+                sfxAudio = null;
             }
 
             if (selected === correct) {
@@ -517,6 +522,7 @@
             if (sfxAudio) {
                 sfxAudio.pause();
                 sfxAudio.currentTime = 0;
+                sfxAudio = null;
             }
         }
 
