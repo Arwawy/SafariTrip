@@ -345,7 +345,6 @@
             <h2 id="quizTitle" style="color: #283618; font-size: 32px;">مسابقة تحدي السفاري 🏆</h2>
             <p id="quizQuestion" style="font-size: 24px; color: #38220f; margin: 20px 0;">السؤال هنا...</p>
             <div class="game-options" id="quizOptions"></div>
-            <button class="modal-close-btn" style="margin-top: 20px; background: #6c757d;" onclick="closeQuiz()">إنهاء المسابقة</button>
         </div>
     </div>
 
@@ -528,7 +527,10 @@
             isAnswerLocked = false;
             if (currentQuestionIdx >= activeQuestions.length) {
                 document.getElementById('quizQuestion').innerText = `🎉 انتهت الجولة! وربح أبطال فصل المبدعون ${score} من ${activeQuestions.length} نقاط!\nاستعدوا لجولة جديدة بأسئلة مختلفة تماماً ✨`;
-                document.getElementById('quizOptions').innerHTML = `<button class="opt-btn" onclick="startQuiz()" style="grid-column: span 2; background: #283618; color: #fff;">ابدأ جولة جديدة (بدون تكرار)</button><button class="opt-btn" onclick="closeQuiz()" style="grid-column: span 2; background: #6c757d; color: #fff;">إغلاق المسابقة</button>`;
+                document.getElementById('quizOptions').innerHTML = `
+                    <button class="opt-btn" onclick="startQuiz()" style="grid-column: span 2; background: #283618; color: #fff;">🔄 ابدأ جولة جديدة (أسئلة جديدة)</button>
+                    <button class="opt-btn" onclick="closeQuiz()" style="grid-column: span 2; background: #992d22; color: #fff;">❌ إغلاق المسابقة</button>
+                `;
                 return;
             }
 
