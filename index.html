@@ -27,7 +27,7 @@
             background: rgba(253, 248, 242, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 25px;
-            max-width: 800px;
+            max-width: 850px;
             margin: 20px auto;
             padding: 15px 30px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -55,16 +55,28 @@
 
         .hero-title-box h1 {
             color: #2c1810;
-            font-size: 34px;
+            font-size: 32px;
             font-weight: 900;
             margin: 0;
         }
 
         .hero-title-box p {
             color: #bc6c25;
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             margin: 3px 0 0;
+        }
+
+        .child-credit {
+            color: #283618;
+            font-size: 17px;
+            font-weight: bold;
+            background: #fefae0;
+            padding: 4px 12px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 5px;
+            border: 1px solid #dda15e;
         }
 
         .game-launch-btn {
@@ -303,6 +315,7 @@
         <div class="hero-title-box">
             <h1>رحلة إلى السفاري البرية</h1>
             <p>روضة نورة بنت حسن الجبر الأهلية - فصل المبدعون</p>
+            <div class="child-credit">مشاركة الطفل: إبراهيم بن صالح الخميس 🌟</div>
         </div>
     </div>
 
@@ -467,9 +480,8 @@
                 btn.className = 'opt-btn';
                 btn.innerText = opt;
                 
-                // استخدام حدث التلامس المباشر للهواتف المحمولة لمنع أي تداخل
                 btn.ontouchstart = (e) => {
-                    e.preventDefault(); // منع النقرات المزدوجة الوهمية
+                    e.preventDefault();
                     btn.blur();
                     checkAnswer(idx, qData.correct);
                 };
@@ -489,7 +501,6 @@
 
             const banner = document.getElementById('feedbackBanner');
             
-            // إيقاف وتفريغ الصوت السابق فوراً لعدم تداخله
             if (sfxAudio) {
                 sfxAudio.pause();
                 sfxAudio.currentTime = 0;
